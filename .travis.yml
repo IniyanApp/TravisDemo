@@ -1,51 +1,60 @@
 language: android
 jdk:
-  - oraclejdk8
+- oraclejdk8
 sudo: true
 dist: trusty
 env:
   global:
-    - ANDROID_API=29
-    - nodejs_version=12
+  - ANDROID_API=29
+  - nodejs_version=12
 android:
   components:
-    - tools
-    - platform-tools
-    - build-tools-29.0.3
-    - android-29
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-19
-    - add-on
-    - extra
+  - tools
+  - platform-tools
+  - build-tools-29.0.3
+  - android-29
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-19
+  - add-on
+  - extra
   licenses:
-    - android-sdk-preview-license-52d11cd2
-    - android-sdk-license-.+
-    - google-gdk-license-.+
-    - yes | sdkmanager --licenses
-    - android-sdk-license-.+
+  - android-sdk-preview-license-52d11cd2
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+  - yes | sdkmanager --licenses
+  - android-sdk-license-.+
 before_install:
-  #auto generate openssl using secret file or jks
-  - chmod +x gradlew
-
-  - nvm install $nodejs_version
-  - node --version
-  - npm --version
-  - yes | sdkmanager "platforms;android-29"
-  - yes | sdkmanager "build-tools;29.0.3"
-  - chmod +x gradlew
+- openssl aes-256-cbc -K $encrypted_53cdc6a50984_key -iv $encrypted_53cdc6a50984_iv
+  -in apiKey.js.enc -out apiKey.js -d
+- chmod +x gradlew
+- nvm install $nodejs_version
+- node --version
+- npm --version
+- yes | sdkmanager "platforms;android-29"
+- yes | sdkmanager "build-tools;29.0.3"
+- chmod +x gradlew
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - "$HOME/.gradle/caches/"
-    - "$HOME/.gradle/wrapper/"
-    - "$HOME/.android/build-cache"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 before_script:
-  - chmod +x gradlew
+- chmod +x gradlew
 script:
-  - "./gradlew clean"
-  - "./gradlew assembleStaging"
-
+- "./gradlew clean"
+- "./gradlew assembleDebug"
+deploy:
+  provider: releases
+  skip_cleanup: true
+  overwrite: true
+  file_glob: true
+  api_key:
+    secure: L9OUItrhEF6yZ0QdK7R7EiNHCfqgGEBbuwYNthfCSkCRX6y0/hfyKpMxjQXCU8jsX1iuWDrJKjwTj6uO2I6r69MD5A+jx1EX0k5Gw2yPdDzQ0SLsARIRc2ZlOaHk0x7JD+W1b6uoIZv/mctAnbpCA9WVY05rN6MPzXMaWMGyxsgiU5nFuque2JlJgaS4DK9vSU5tMa+q6gF1HXICDVElEjWYdyCL6eEfpDu98BgsvibyWD54hisvP+iTQSFAh+PCwDdWe2iPX3/o5VlwlBD+p/QoRvvBJxPGUMhuLP9Yq6jdoyBr5oupRhR987REaxGWWMswE3Kcdc6j+AVnrR9b9tOi4w5kWTW2OK6+JGxH9iyGmbYlsmuOCKKbTyxbMp9B3fqVLaIpku5TwzEJHcRt71uh7Sa+HJO954fMQ7P07ydoYPpMmw80wrihOcP2cp3GCHvvCHBKO2hldfpetdLphPAWFW5Ug3E9WBxxrCm3XflLS7iIuqWa2UrSAgej8cuyjh6hm6j6nJbE1ZvEVW7HxeCNaFfhDZD1WYWQ2h3OLrBXQQGESL+bG5i8UW7eSF6bZQHhrI5KBexuR/7aS3NyfA3++nSPj+Icb6quviaJJMw04IPD3lrUTIhoECBkmyzj6VuQWAPHwPQQhQvg2+JFjWlFK7RTokxdk9Djs6dUPVM=
+  file: "$TRAVIS_BUILD_DIR/app/build/outputs/apk/debug/*"
+  on:
+    repo: IniyanApp/TravisDemo

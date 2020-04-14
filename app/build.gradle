@@ -17,11 +17,29 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            def isRunningOnTravis = System.getenv("CI") == "true"
+            if (isRunningOnTravis) {
+                def baseUrl=System.getenv("encrypted_53cdc6a50984_iv")
+                buildConfigField "String","TRAVIS_BASEURL","\"$baseUrl\""
+
+                def gatewayKey=System.getenv("encrypted_53cdc6a50984_key")
+                buildConfigField "String","GATEWAY_KEY","\"$gatewayKey\""
+
+            }else {
+                def baseUrl="iniyan"
+                buildConfigField "String","TRAVIS_BASEURL","\"$baseUrl\""
+                def gatewayKey="arul"
+                buildConfigField "String","GATEWAY_KEY","\"$gatewayKey\""
+            }
+
         }
     }
+
+
+
 
 }
 
