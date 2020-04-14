@@ -15,13 +15,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-  val textview=findViewById<TextView>(R.id.hello)
+        val textview=findViewById<TextView>(R.id.hello)
         val gatewayUrl: String = BuildConfig.GATEWAY_KEY
         val baseUrl: String = BuildConfig.TRAVIS_BASEURL
 
-
         textview.setText(""+gatewayUrl+"====="+baseUrl)
-//        Log.e(TAG, "==gateway=$gatewayUrl")
-//        Log.e(TAG, "==baseUrl=$baseUrl")
+        Log.e(TAG, "==encrypted_53cdc6a50984_key=$gatewayUrl")
+        Log.e(TAG, "==encrypted_53cdc6a50984_iv=$baseUrl")
     }
 }
