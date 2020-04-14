@@ -48,5 +48,4 @@ before_script:
 script:
   - "./gradlew clean"
   - "./gradlew assembleStaging"
-# To find the apk not required
-#- find $PWD -name "*.apk" -exec ls -lh {} \;
+
